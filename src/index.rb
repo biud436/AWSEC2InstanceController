@@ -22,7 +22,7 @@ module EntryPoint
                     # 캐시된 메타 데이터 파일이 없어서 새로 생성하였습니다.
                     puts "CRC 데이터를 가져오는데 실패했습니다."
                 },
-                different:->(cached_data, new_data) {]) {
+                different:->(cached_data, new_data) {
                     # 새로운 데이터가 있습니다.
 
                     # 기존 규칙을 캐시된 메타 파일로부터 가져옵니다

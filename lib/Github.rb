@@ -50,7 +50,7 @@ module Github
             f.close
         end
 
-        def check_crc(callback={:success => Proc.new, :fail => Proc.new})
+        def check_crc(callback={:success => Proc.new, :fail => Proc.new, :different => Proc.new})
             is_existed = File.exist?(Github::CRC_PATH)
 
             # 파일이 존재한다면 CRC를 비교한다.
@@ -70,6 +70,7 @@ module Github
                     callback[:success].call(crc_raw_check)
                 else
                     puts "crc is different"
+                    callback[:different].call
                 end                
             else 
                 create_crc

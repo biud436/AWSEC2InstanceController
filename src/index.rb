@@ -1,6 +1,7 @@
 #!/bin/ruby -w
 
 require 'ipaddr'
+require 'optparse'
 require_relative "../lib/OS"
 require_relative "../lib/EC2"
 require_relative "../lib/Github"
@@ -11,7 +12,13 @@ module EntryPoint
         def initialize
             @meta = Github::Metadata.new
             @ec2 = EC2.new
+        end
 
+        def print_rules
+            @ec2.print_inbound_rules
+        end
+
+        def start_with_rules
             # CRC 체크
             @meta.check_crc(
                 success:->(crc){
@@ -38,25 +45,28 @@ module EntryPoint
                     p "새로운 인바운드 규칙을 적용하였습니다.-"
                     @ec2.add_inbound_rule(new_data)
                 }
-            )
-        end
-    end
-
-    def refresh_github_workflow_inbound_rules
-        actions = @meta.actions
-        return false if actions.nil? or !actions.is_a?(Array)
-        return if !@ec2.is_a?(EC2)
-
-        actions.each do |e|
-            addr = IPAddr.new(e)
-            if addr.ipv4?
-                # IP 취득
-                addr = addr.to_s
-                # 인바운드 규칙으로 추가
-                @ec2.add_inbound_rule(addr)
-            end
+            )            
         end
     end
 end
 
-EntryPoint::App.new
+$app = EntryPoint::App.new
+
+options = {:crc => nil}
+parser = OptionParser.new do|opts|
+	opts.banner = "Usage: aws_ec2_simple_connector [options]"
+	opts.on('-c', '--crc', 'CRC 체크를 통해 인바운드 규칙을 추가합니다.') do |e|
+		$app.start_with_rules
+	end
+
+	opts.on('-p', '--print', '인바운드 규칙을 출력합니다.') do |e|
+		$app.print_rules
+	end
+
+	opts.on('-h', '--help', 'Displays Help') do
+		puts opts
+		exit
+	end
+end
+
+parser.parse!

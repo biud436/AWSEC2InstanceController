@@ -36,7 +36,7 @@ class EC2
 
         addrs = @client.describe_security_groups.data.security_groups.collect do |e|        
             e.ip_permissions.collect do |i|
-                cidr_ip = i.ip_ranges.first.
+                cidr_ip = i.ip_ranges.first.cidr_ip
                 
                 ip_validator = IPAddr.new(cidr_ip)
 

@@ -1,5 +1,6 @@
 require 'aws-sdk-ec2'
 require "yaml"
+require 'ipaddr'
 
 # 이 클래스는 EC2 인스턴스의 인바운드 규칙을 조회하고, 새로운 인바운드 규칙을 추가합니다.
 class EC2
@@ -35,7 +36,13 @@ class EC2
 
         addrs = @client.describe_security_groups.data.security_groups.collect do |e|        
             e.ip_permissions.collect do |i|
-                cidr_ip = i.ip_ranges.first.cidr_ip
+                cidr_ip = i.ip_ranges.first.
+                
+                ip_validator = IPAddr.new(cidr_ip)
+
+                # IPv4 버전이 아니면 다음 IP로 넘깁니다.
+                next if !ip_validator.ipv4?
+
                 desc = i.ip_ranges.first.description || ""
                 port = i.from_port
                 ret = {"ip" => cidr_ip, "desc" => desc, "port" => port}

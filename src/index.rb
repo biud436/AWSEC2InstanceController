@@ -1,6 +1,5 @@
 #!/bin/ruby
 
-require 'ipaddr'
 require 'optparse'
 require_relative "../lib/OS"
 require_relative "../lib/EC2"

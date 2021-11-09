@@ -14,7 +14,6 @@ module Github
             @meta = WebRequest.get('https://api.github.com/meta')
             @actions = @meta["actions"] || [""]
             @cache_actions = []
-            deserialize
         end
 
         def serialize
@@ -29,10 +28,15 @@ module Github
             File.open(Github::META_PATH, "r") do |f|
                 tmp = Marshal.load(f)
                 @cache_actions = tmp
-            end        
+            end   
+            p @cache_actions     
             if @cache_actions.eql?(@actions)
                 puts "정확히 같습니다."
             end    
+        end
+
+        def cached_data
+            @cache_actions
         end
 
         # crc를 만듭니다.
@@ -51,6 +55,10 @@ module Github
         end
 
         def check_crc(callback={:success => Proc.new, :fail => Proc.new, :different => Proc.new})
+
+            # 캐시 데이터를 불러옵니다.
+            deserialize
+
             is_existed = File.exist?(Github::CRC_PATH)
 
             # 파일이 존재한다면 CRC를 비교한다.
@@ -70,7 +78,7 @@ module Github
                     callback[:success].call(crc_raw_check)
                 else
                     puts "crc is different"
-                    callback[:different].call
+                    callback[:different].call(cached_data, @actions)
                 end                
             else 
                 create_crc

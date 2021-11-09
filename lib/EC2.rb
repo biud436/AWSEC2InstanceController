@@ -46,27 +46,29 @@ class EC2
 
     # 인바운드 규칙을 추가합니다.
     # @return [Void]
-    def add_inbound_rule(ip_range)
+    def add_inbound_rule(rules)
         if not @client.is_a?(Aws::EC2::Client)
             puts "ec2_client is not a Aws::EC2::Client"
             return
         end
 
-        @client.authorize_security_group_ingress({
-            group_id: @config['security_group_id'],
-            ip_permissions: [
-                {
-                    ip_protocol: 'ssh',
-                    from_port: 22,
-                    to_port: 22,
-                    ip_ranges: [
-                        {
-                            cidr_ip: ip_range
-                        }
-                    ]
-                }
-            ]
-        })
+        rules.each do |rule|
+            @client.authorize_security_group_ingress({
+                group_id: @config['security_group_id'],
+                ip_permissions: [
+                    {
+                        ip_protocol: 'ssh',
+                        from_port: 22,
+                        to_port: 22,
+                        ip_ranges: [
+                            {
+                                cidr_ip: rule
+                            }
+                        ]
+                    }
+                ]
+            })
+        end
 
     end
 
@@ -87,7 +89,7 @@ class EC2
                     to_port: 22,
                     ip_ranges: [
                         {
-                            cidr_ip: e['ip']
+                            cidr_ip: e
                         }
                     ]
                 }

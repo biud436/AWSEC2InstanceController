@@ -65,8 +65,13 @@ aws configure
 
 finally, try to do below command
 
+# Usage
+
 ```sh
-aws_ec2_simple_connector
+Usage: aws_ec2_simple_connector [options]
+    -c, --crc                        CRC 체크를 통해 인바운드 규칙을 추가합니다.
+    -p, --print                      인바운드 규칙을 출력합니다.
+    -h, --help                       Displays Help
 ```
 
 # Link

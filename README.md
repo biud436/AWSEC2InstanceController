@@ -8,6 +8,8 @@ To install this tool, note that you must install ruby or aws-sdk and then setup 
 if you didn't install ruby language on your system such as 'ubuntu server and macOS', try out below solution.
 
 ```sh
+sudo chmod +x ./setup.sh
+./setup.sh
 sudo apt-get install ruby-full
 ruby --version
 ```

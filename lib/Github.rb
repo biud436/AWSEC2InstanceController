@@ -9,6 +9,7 @@ module Github
         def initialize
             @meta = WebRequest.get('https://api.github.com/meta')
             @actions = @meta["actions"] || [""]
+            
         end
 
         # crc를 만듭니다.
@@ -29,7 +30,7 @@ module Github
             f.close
         end
 
-        def check_crc(&callback)
+        def check_crc(callback={:success => Proc.new, :fail => Proc.new})
             crc_file_path = File.join(File.dirname(__FILE__), "..", 'crc.bin')
             is_existed = File.exist?(crc_file_path)
 
@@ -39,7 +40,7 @@ module Github
                 crc_raw = File.read(crc_file_path)
 
                 # 이전 CRC 값
-                prev_crc = YAML.load(crc_raw)[:crc] rescue ""
+                prev_crc = YAML.load(crc_raw)["crc"] rescue ""
 
                 # 새로운 CRC 값
                 crc = Zlib::crc32(@actions.to_s)
@@ -47,13 +48,13 @@ module Github
 
                 if prev_crc == crc_raw_check
                     # 콜백 블럭을 호출한다.
-                    callback.call
+                    callback[:success].call(crc_raw_check)
                 else
                     puts "crc is different"
                 end                
             else 
-                # 콜백 블럭을 호출한다.
-                callback.call
+                create_crc
+                callback[:failed].call
             end
 
         end

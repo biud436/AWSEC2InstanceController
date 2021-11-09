@@ -1,7 +1,6 @@
 #!/bin/ruby -w
 
 require 'ipaddr'
-
 require_relative "../lib/OS"
 require_relative "../lib/EC2"
 require_relative "../lib/Github"
@@ -11,7 +10,14 @@ module EntryPoint
     class App
         def initialize
             @meta = Github::Metadata.new
-            @ec2 = EC2.new
+            @meta.check_crc(
+                success:->(crc){
+                    puts "CRC 데이터는 #{crc} 입니다."
+                }, 
+                failed:->(err) {
+                    puts "CRC 데이터를 가져오는데 실패했습니다."
+                }
+            )
         end
     end
 
@@ -32,3 +38,4 @@ module EntryPoint
     end
 end
 
+EntryPoint::App.new

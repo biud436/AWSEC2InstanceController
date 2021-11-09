@@ -44,6 +44,7 @@ class EC2
         addrs
     end
 
+    # 인바운드 규칙을 추가합니다.
     # @return [Void]
     def add_inbound_rule(ip_range)
         if not @client.is_a?(Aws::EC2::Client)
@@ -67,6 +68,31 @@ class EC2
             ]
         })
 
+    end
+
+    # 인바운드 규칙을 삭제합니다.
+    # @return [Void]
+    def remove_inbound_rule(prev_rules)
+        if not @client.is_a?(Aws::EC2::Client)
+            puts "ec2_client is not a Aws::EC2::Client"
+            return
+        end
+
+        @client.revoke_security_group_ingress({
+            group_id: @config['security_group_id'],
+            ip_permissions: prev_rules.collect do |e|
+                {
+                    ip_protocol: 'ssh',
+                    from_port: 22,
+                    to_port: 22,
+                    ip_ranges: [
+                        {
+                            cidr_ip: e['ip']
+                        }
+                    ]
+                }
+            end
+        })       
     end
 
 end

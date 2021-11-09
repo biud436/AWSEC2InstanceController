@@ -22,7 +22,7 @@ or try out these commands. however it is not stable because docker's file system
 sudo docker pull ruby
 vi ~/.bashrc
 
-alias irb='sudo docker run -it ruby -v "/bin/:/usr/local/bin"'
+alias irb='sudo docker run -it ruby -v "~/.ruby:/usr/local/bin"'
 source ~/.bashrc
 ```
 

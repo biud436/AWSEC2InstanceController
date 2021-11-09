@@ -58,3 +58,7 @@ source .bashrc
 
 aws configure
 ```
+
+# Link
+
+[https://docs.aws.amazon.com/sdk-for-ruby/v3/api/index.html](https://docs.aws.amazon.com/sdk-for-ruby/v3/api/index.html)

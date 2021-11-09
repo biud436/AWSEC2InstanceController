@@ -1,3 +1,5 @@
+#!/bin/ruby -w
+
 require 'uri'
 require 'net/http'
 require 'json'
@@ -113,6 +115,7 @@ end
 module Github
     class Metadata
         attr_accessor :actions
+
         def initialize
             @meta = WebRequest.get('https://api.github.com/meta')
             @actions = @meta["actions"] || [""]

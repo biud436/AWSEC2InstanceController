@@ -60,7 +60,7 @@ parser = OptionParser.new do|opts|
 	end
 
 	opts.on('-p', '--print', '인바운드 규칙을 출력합니다.') do |e|
-		$app.print_rules
+		p $app.print_rules
 	end
 
 	opts.on('-h', '--help', 'Displays Help') do

@@ -1,4 +1,4 @@
-#!/bin/ruby -w
+#!/bin/ruby
 
 require 'ipaddr'
 require 'optparse'

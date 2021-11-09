@@ -59,7 +59,7 @@ class EC2
                 group_id: @config['security_group_id'],
                 ip_permissions: [
                     {
-                        ip_protocol: 'ssh',
+                        ip_protocol: 'tcp',
                         from_port: 22,
                         to_port: 22,
                         ip_ranges: [

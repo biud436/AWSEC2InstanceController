@@ -4,6 +4,8 @@ require "yaml"
 # 이 클래스는 EC2 인스턴스의 인바운드 규칙을 조회하고, 새로운 인바운드 규칙을 추가합니다.
 class EC2
 
+    CONFIG_FILE_PATH = File.join(File.dirname(__FILE__), "..", 'config.yml')
+
     attr_accessor :client
 
     def initialize()
@@ -19,7 +21,7 @@ class EC2
     end
 
     def load_config
-        File.open(File.join(File.dirname(__FILE__), "..", 'config.yml'), 'r') do |f|
+        File.open(EC2::CONFIG_FILE_PATH, 'r') do |f|
             @config = YAML.load(f)
         end
     end

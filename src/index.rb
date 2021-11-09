@@ -8,40 +8,8 @@ require 'aws-sdk-ec2'
 require "yaml"
 require 'zlib'
 
-# This module checks whether the platform is on Windows or Linux
-# 
-# ## Example
-#
-#   OS.linux?
-#   OS.windows?
-#
-module OS
-    
-    def self.linux?
-        index = RUBY_PLATFORM =~ /(?:linux)/i
-        index != nil and index >= 0
-    end
-
-    def self.windows?
-        index = RUBY_PLATFORM =~ /(?:x32|x64)/i
-        index != nil and index >= 0
-    end
-end
- 
-# 이 클래스는 특정 URL에 GET 요청을 보내고 JSON(HASH)으로 반환 받습니다.
-#
-# ## 예제
-#
-#  url = "http://www.google.com"
-#  data = WebRequest.get(url)
-#
-class WebRequest
-    def self.get(url)
-        uri = URI(url)
-        response = Net::HTTP.get_response(uri)
-        JSON.parse(response.body)
-    end
-end
+require_relative "../lib/OS"
+require_relative "../lib/WebRequest"
 
 # 이 클래스는 EC2 인스턴스의 인바운드 규칙을 조회하고, 새로운 인바운드 규칙을 추가합니다.
 class EC2
@@ -79,6 +47,7 @@ class EC2
                 desc = i.ip_ranges.first.description || ""
                 port = i.from_port
                 ret = {"ip" => cidr_ip, "desc" => desc, "port" => port}
+                ret
             end
         end
 
@@ -135,7 +104,7 @@ module Github
 
             # CRC 덤프를 루프 경로에 저장
             f = File.open(crc_file_path, "w+")
-            f.puts crc_raw
+            f.puts yaml_dump_bin
             f.close
         end
 

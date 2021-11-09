@@ -14,7 +14,7 @@ module EntryPoint
                 success:->(crc){
                     puts "CRC 데이터는 #{crc} 입니다."
                 }, 
-                failed:->(err) {
+                failed:->() {
                     puts "CRC 데이터를 가져오는데 실패했습니다."
                 }
             )

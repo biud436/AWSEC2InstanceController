@@ -83,7 +83,7 @@ module Github
             else 
                 create_crc
                 serialize
-                callback[:failed].call
+                callback[:failed].call(@actions)
             end
 
         end

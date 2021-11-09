@@ -48,7 +48,7 @@ module Github
             data = {"crc" => crc_raw}
             yaml_dump_bin = YAML.dump(data)
 
-            # CRC 덤프를 루프 경로에 저장
+            # CRC 덤프를 루트 경로에 저장
             f = File.open(Github::CRC_PATH, "w+")
             f.puts yaml_dump_bin
             f.close
